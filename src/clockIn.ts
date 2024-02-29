@@ -25,7 +25,7 @@ export async function toClockIn(jSessionId: string): Promise<void> {
   };
 
   fetch(`${loginUrl}/localizador/registrarPonto`, options)
-    .then(response => response.json())
+    .then(response => response.ok ? response.json() : response.text().then(r => { throw new Error(r) }))
     .then(response => appendLog(response))
     .catch(err => appendLog(err, true));
 }
@@ -33,16 +33,19 @@ export async function toClockIn(jSessionId: string): Promise<void> {
 
 export async function getJSessionId(): Promise<string> {
   appendLog("Abrindo navegador...");
-  const browser = await chromium.launch({ headless: true, });
+  const browser = await chromium.launch({ headless: false, });
   const context = await browser.newContext({ ignoreHTTPSErrors: true, permissions: ['geolocation'], });
   const page = await context.newPage();
 
 
-  appendLog(`Redirecionando para ${loginUrl}/localizador`);
-  await page.goto(loginUrl + '/localizador');
+  appendLog(`Redirecionando para ${loginUrl}/ponto`);
+  await page.goto(loginUrl + '/ponto');
 
   await page.getByText("Registrar Ponto").click();
-  await page.waitForResponse(r => r.url() === `${loginUrl}/localizador/carregarTela`)
+  await page.waitForResponse(r => {
+    console.log(r.url())
+    return r.url() === `${loginUrl}/ponto/localizador/localizador/carregarTela`
+  })
   const cokkie = await context.cookies()
   const jSessionId = cokkie.find(c => c.name === 'JSESSIONID')
   appendLog(jSessionId);

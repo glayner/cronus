@@ -26,6 +26,7 @@ async function main() {
     const holliday = isHolliday()
     if (holliday) {
       appendLog(`Feriado: ${holliday.dia}`)
+      return
     }
 
     const jSessionId =  await getJSessionId()
