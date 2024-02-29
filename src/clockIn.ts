@@ -33,7 +33,7 @@ export async function toClockIn(jSessionId: string): Promise<void> {
 
 export async function getJSessionId(): Promise<string> {
   appendLog("Abrindo navegador...");
-  const browser = await chromium.launch({ headless: false, });
+  const browser = await chromium.launch({ headless: true, });
   const context = await browser.newContext({ ignoreHTTPSErrors: true, permissions: ['geolocation'], });
   const page = await context.newPage();
 
