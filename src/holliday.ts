@@ -46,6 +46,7 @@ function getHolidaysBr(y: number): IHolliday[] {
   var nossaSenhora = new MyDate().month(10).day(12);
   var finados = new MyDate().month(11).day(2);
   var proclamaRepublica = new MyDate().month(11).day(15);
+  var concienciaNegra = new MyDate().month(11).day(20);
   var diaEvangelico = new MyDate().month(11).day(30);
   var natal = new MyDate().month(12).day(25);
   return [
@@ -88,6 +89,11 @@ function getHolidaysBr(y: number): IHolliday[] {
       m: proclamaRepublica,
       dia: "Proclamação da República",
       d: proclamaRepublica.toLocaleDateString("pt-BR"),
+    },
+    {
+      m: concienciaNegra,
+      dia: "Dia Nacional da Consciência Negra",
+      d: concienciaNegra.toLocaleDateString("pt-BR"),
     },
     {
       m: diaEvangelico,

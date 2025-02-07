@@ -2,7 +2,7 @@ import "dotenv/config";
 import { chromium } from "playwright";
 import { appendLog } from './fileManager';
 
-const loginUrl = String(process.env.LOGIN_URL)
+const LOGIN_URL = String(process.env.LOGIN_URL)
 
 
 export async function toClockIn(jSessionId: string): Promise<void> {
@@ -20,11 +20,14 @@ export async function toClockIn(jSessionId: string): Promise<void> {
       longitude: String(process.env.LOGIN_LONG),
       timezone: 'America/Sao_Paulo',
       ip: String(process.env.LOGIN_IP),
-      fotoBase64: ''
+      ipInterno: '',
+      fotoBase64: '',
+      tipo: 'padrao',
+      tokenLocalizador: ''
     })
   };
 
-  fetch(`${loginUrl}/localizador/registrarPonto`, options)
+  fetch(`${LOGIN_URL}/localizador/registrarPonto`, options)
     .then(response => response.ok ? response.json() : response.text().then(r => { throw new Error(r) }))
     .then(response => appendLog(response))
     .catch(err => appendLog(err, true));
@@ -38,13 +41,13 @@ export async function getJSessionId(): Promise<string> {
   const page = await context.newPage();
 
 
-  appendLog(`Redirecionando para ${loginUrl}/ponto`);
-  await page.goto(loginUrl + '/ponto');
+  appendLog(`Redirecionando para ${LOGIN_URL}/ponto`);
+  await page.goto(LOGIN_URL + '/ponto');
 
   await page.getByText("Registrar Ponto").click();
   await page.waitForResponse(r => {
     console.log(r.url())
-    return r.url() === `${loginUrl}/ponto/localizador/localizador/carregarTela`
+    return r.url() === `${LOGIN_URL}/ponto/localizador/localizador/carregarTela`
   })
   const cokkie = await context.cookies()
   const jSessionId = cokkie.find(c => c.name === 'JSESSIONID')
